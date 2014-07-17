@@ -1,3 +1,9 @@
+## Be Aware
+
+__This plugin is currently under development.
+Don't get mad at me if you find incomplete documentation or, in the worst scenario, a bug.__
+
+
 jQuery-formulary Plugin
 ================
 
