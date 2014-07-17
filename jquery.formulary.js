@@ -44,7 +44,6 @@ jQuery.fn.formulary = function(options) {
 				
 				if( data !== undefined ) {
 					var validate = data.split(' ');
-					console.log(validate);
 					// Will force to create required attribute
 					if(jQuery.inArray('required', validate) ) {
 						jQuery($this).prop('required',true);
@@ -53,7 +52,10 @@ jQuery.fn.formulary = function(options) {
 					for(var i = 0; i < validate.length; i++) {
 						if(typeof methods.validate[validate[i]] == 'function') {
 							methods.validate[validate[i]]($this, value.toString());
-							if(settings.submit == false) return false;
+							if(settings.submit == false) {
+								jQuery($this).focus();
+								return false;
+							}
 						}
 					}
 				}
@@ -67,20 +69,17 @@ jQuery.fn.formulary = function(options) {
 			required : function(element, value) {
 				if( value == '' ) {
 					settings.submit = false;
-					jQuery(element).focus();
 				}
 			},
 			empty : function( element, value ) {
 				if( value == '' ) {
 					settings.submit = false;
-					jQuery(element).focus();
 				}
 			},
 			length : function(element, value) {
 				if( jQuery(element).data('length') ) {
 					if(value.length < jQuery(element).data('length')) {
 						settings.submit = false;
-						jQuery(element).focus();
 					}
 				}
 			},
@@ -91,11 +90,16 @@ jQuery.fn.formulary = function(options) {
 					for(var i = 0; i < values.length; i++) {
 						if(value == values[i]) {
 							settings.submit = false;
-							jQuery(element).focus();
 							break;
 						}
 					}
 				}
+			},
+			email : function(element, value) {
+				var regex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+                if(regex.test(value) == false) {
+                	settings.submit = false;
+                }
 			}
 			
 		}
