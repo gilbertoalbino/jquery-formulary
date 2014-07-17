@@ -7,7 +7,7 @@
  * Copyright 2014 Gilberto Albino 
  * Released under the GLP v2 license:
  *   http://www.gnu.org/licenses/gpl-2.0.html
- */
+ */ 
 jQuery.fn.formulary = function(options) {
 
 	var defaults = {
