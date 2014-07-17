@@ -29,7 +29,7 @@ Include the jquery.formulary.js file in your page.
 In your form input elements define some data properties to let jQuery Formulary Plugin know you want to validate something.
 
 ```html
-<input type="text" name="any-name" id="any-id" data-validate="empty"> 
+<input type="text" name="any-name" id="any-id" data-validate="notempty"> 
 <select data-validate="not" data-not="0">
 <option value="0">--Choose--</option>
 </select>
