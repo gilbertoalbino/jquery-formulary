@@ -37,7 +37,7 @@ In your form input elements define some data properties to let jQuery Formulary 
 
 ##Note
 
-Validate won't make validation process required. If you want to make an input required, add a __required__ to validate attribute.
+__data-validate__ won't make a validation process required. If you want to make an input required, add a ___required___ to validate attribute.
 
 ```html
 <input type="text" name="any-name" id="any-id" data-validate="alphanumeric required"> 
