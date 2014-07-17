@@ -25,9 +25,7 @@ jQuery.fn.formulary = function(options) {
 	var methods = {
 		// Effectively runs the plugin
 		init : function(element) {
-			
 			methods.iterate();
-			
 			if(typeof settings.success == 'function' && settings.submit == true) {
 				settings.success.apply(Array.prototype.slice.call(arguments, 1));
 			}
@@ -36,14 +34,15 @@ jQuery.fn.formulary = function(options) {
 		iterate : function() {
 			// Will end up to be true if not blocked in validation
 			settings.submit = true;
+			
 			jQuery(settings.form + ' :input').each(function(){
-				
 				var $this = jQuery(this);
 				var data = $this.data('validate');
 				var value = $this.val();
 				
 				if( data !== undefined ) {
 					var validate = data.split(' ');
+					
 					// Will force to create required attribute
 					if(jQuery.inArray('required', validate) ) {
 						jQuery($this).prop('required',true);
@@ -71,11 +70,11 @@ jQuery.fn.formulary = function(options) {
 					settings.submit = false;
 				}
 			},
-			empty : function( element, value ) {
-				if( value == '' ) {
-					settings.submit = false;
-				}
+			// alias for required indeed
+			notempty : function( element, value ) {
+				methods.validate.required(element, value);
 			},
+			// do not confuse with js lentgh method
 			length : function(element, value) {
 				if( jQuery(element).data('length') ) {
 					if(value.length < jQuery(element).data('length')) {
@@ -100,7 +99,26 @@ jQuery.fn.formulary = function(options) {
                 if(regex.test(value) == false) {
                 	settings.submit = false;
                 }
+			},
+			regex : function(element, value) {
+				var regex = new RegExp(jQuery(element).data('regex'));
+				if(regex.test(value) == false) {
+					settings.submit = false;
+				}
 			}
+			/* 
+			@todo
+			  it should be possible to only pass on a certain condition.
+			  this could be performed by a regular expression.
+			condition : function(element, value) {
+				var condition = jQuery(element).data('condition');
+				if(condition !== undefined) {
+					//condition['element1[not=0] element2[=1]'];
+					var items = condition.split(' ');
+					for(var i = 0; i < items.length; i++) {
+					}
+				}
+			}*/
 			
 		}
 		
