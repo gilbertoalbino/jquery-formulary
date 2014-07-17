@@ -13,7 +13,10 @@ jQuery.fn.formulary = function(options) {
 	var defaults = {
 		form : 'form',
 		submit : false,
-		success : null
+		success : null,
+		currentData : null,
+		currentElement : null,
+		currentValue : null
 	};
 
 	var messages = [
@@ -31,28 +34,37 @@ jQuery.fn.formulary = function(options) {
 			}
 		},
 		
+		testData : function(data) {
+			var dataValue = jQuery(settings.currentElement).data(data);
+			if(dataValue !== undefined) {
+				settings.currentData = dataValue.toString();
+				return true;
+			} 
+			return false;
+		},
+		
 		iterate : function() {
 			// Will end up to be true if not blocked in validation
 			settings.submit = true;
 			
 			jQuery(settings.form + ' :input').each(function(){
 				var $this = jQuery(this);
-				var data = $this.data('validate');
-				var value = $this.val();
+				settings.currentElement =  $this;
+				settings.currentValue = $this.val().toString();
 				
-				if( data !== undefined ) {
-					var validate = data.split(' ');
+				if( methods.testData('validate') ) {
+					var validate = settings.currentData.split(' ');
 					
 					// Will force to create required attribute
 					if(jQuery.inArray('required', validate) ) {
-						jQuery($this).prop('required',true);
+						jQuery(settings.currentElement).prop('required',true);
 					}
 					
 					for(var i = 0; i < validate.length; i++) {
 						if(typeof methods.validate[validate[i]] == 'function') {
-							methods.validate[validate[i]]($this, value.toString());
+							methods.validate[validate[i]]();
 							if(settings.submit == false) {
-								jQuery($this).focus();
+								jQuery(settings.currentElement).focus();
 								return false;
 							}
 						}
@@ -65,45 +77,67 @@ jQuery.fn.formulary = function(options) {
 		 * Validation suit
 		 */
 		validate : {
-			required : function(element, value) {
-				if( value == '' ) {
+			required : function() {
+				if( settings.currentValue == '' ) {
 					settings.submit = false;
 				}
 			},
+			
 			// alias for required indeed
-			notempty : function( element, value ) {
-				methods.validate.required(element, value);
+			notempty : function() {
+				methods.validate.required();
 			},
+			
 			// do not confuse with js lentgh method
-			length : function(element, value) {
-				if( jQuery(element).data('length') ) {
-					if(value.length < jQuery(element).data('length')) {
+			length : function() {
+				if( methods.testData(element, 'length') ) {
+					if(value.length < settings.currentData) {
 						settings.submit = false;
 					}
 				}
 			},
-			not : function( element, value ) {
-				var not = jQuery(element).data('not');
-				if(not !== undefined) {
-					var values = not.toString().split(' ');
+			
+			alphanumericalallow : function() {
+				if( methods.testData(element, 'allow')) {
+					var regex = new RegExp('^([a-zA-Z0-9' + settings.currentData + ']+)$');
+					if(regex.test(value) == false ) {
+						settings.submit = false;
+					}
+				} 
+			},
+			
+			alphanumerical : function() {
+				var regex = /^([a-zA-Z0-9]+)$/;
+				if(regex.test(value) == false) {
+					settings.submit = false;
+				}
+			},
+			
+			not : function() {
+				if(methods.testData('not')) {
+					var values = settings.currentData.split(' ');
 					for(var i = 0; i < values.length; i++) {
-						if(value == values[i]) {
+						if(settings.currentValue == values[i]) {
 							settings.submit = false;
 							break;
 						}
 					}
 				}
 			},
-			email : function(element, value) {
+			
+			email : function() {
 				var regex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
                 if(regex.test(value) == false) {
                 	settings.submit = false;
                 }
 			},
-			regex : function(element, value) {
-				var regex = new RegExp(jQuery(element).data('regex'));
-				if(regex.test(value) == false) {
-					settings.submit = false;
+			
+			regex : function() {
+				if(methods.testData(element, 'regex')) {
+					var regex = new RegExp(settings.currentData);
+					if(regex.test(value) == false) {
+						settings.submit = false;
+					}
 				}
 			}
 			/* 
