@@ -29,7 +29,7 @@ Include the jquery.formulary.js file in your page.
 In your form input elements define some data properties to let jQuery Formulary Plugin know you want to validate something.
 
 ```html
-<input type="text" name="any-name" id="any-id" data-validate="notempty"> 
+<input type="text" name="any-name" id="any-id" data-validate="alphanumeric"> 
 <select data-validate="not" data-not="0">
 <option value="0">--Choose--</option>
 </select>
@@ -37,14 +37,11 @@ In your form input elements define some data properties to let jQuery Formulary 
 
 ##Note
 
-Since you define a data-validate attribute to your input it will imediately be made required once it has to block the submission to focus on that element.
-But if you just want to make it required and not validate, just set __validate__ to ___required___ or use the __required__ HTML attribute. 
-
-The __data-validate__ property does not mean a "filtering validation" by itself. It is a port to jQuery Formulary Plugin 
+Validate won't make validation process required. If you want to make an input required, add a __required__ to validate attribute.
 
 ```html
-<input type="text" name="any-name" id="any-id" data-validate="required"> 
-<select data-validate="required">
+<input type="text" name="any-name" id="any-id" data-validate="alphanumeric required"> 
+<select data-validate="not required" data-not="0">
 <option value="0">--Choose--</option>
 </select>
 ```
