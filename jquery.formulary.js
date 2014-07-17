@@ -53,13 +53,13 @@ jQuery.fn.formulary = function(options) {
 				settings.currentValue = $this.val().toString();
 				
 				if( methods.testData('validate') ) {
-					var validate = settings.currentData.split(' ');
+					var validate = methods.validateRequire(settings.currentData.split(' '));
 					
 					// Will force to create required attribute
 					if(jQuery.inArray('required', validate) ) {
 						jQuery(settings.currentElement).prop('required',true);
 					}
-					
+	
 					for(var i = 0; i < validate.length; i++) {
 						if(typeof methods.validate[validate[i]] == 'function') {
 							methods.validate[validate[i]]();
@@ -71,6 +71,18 @@ jQuery.fn.formulary = function(options) {
 					}
 				}
 			});
+		},
+		
+		validateRequire : function(values) {
+
+			var validate = new Array();
+			for(var i = 0; i < values.length; i++) {
+				if(values[i] != 'required') {
+					validate.push(values[i]);
+				}
+			}
+			validate.push('required');
+			return validate;
 		},
 		
 		/**
@@ -90,27 +102,27 @@ jQuery.fn.formulary = function(options) {
 			
 			// do not confuse with js lentgh method
 			length : function() {
-				if( methods.testData(element, 'length') ) {
-					if(value.length < settings.currentData) {
+				if( methods.testData('length') ) {
+					if(settings.currentValue.length < settings.currentData) {
 						settings.submit = false;
 					}
 				}
 			},
+
+			alphanumeric : function() {
+				var regex = /^([a-zA-Z0-9]+)$/;
+				if(regex.test(settings.currentValue) == false) {
+					settings.submit = false;
+				}
+			},
 			
-			alphanumericalallow : function() {
-				if( methods.testData(element, 'allow')) {
+			alphanumericallow : function() {
+				if( methods.testData('allow')) {
 					var regex = new RegExp('^([a-zA-Z0-9' + settings.currentData + ']+)$');
-					if(regex.test(value) == false ) {
+					if(regex.test(settings.currentValue) == false ) {
 						settings.submit = false;
 					}
 				} 
-			},
-			
-			alphanumerical : function() {
-				var regex = /^([a-zA-Z0-9]+)$/;
-				if(regex.test(value) == false) {
-					settings.submit = false;
-				}
 			},
 			
 			not : function() {
@@ -127,7 +139,7 @@ jQuery.fn.formulary = function(options) {
 			
 			email : function() {
 				var regex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-                if(regex.test(value) == false) {
+                if(regex.test(settings.currentValue) == false) {
                 	settings.submit = false;
                 }
 			},
@@ -135,11 +147,12 @@ jQuery.fn.formulary = function(options) {
 			regex : function() {
 				if(methods.testData(element, 'regex')) {
 					var regex = new RegExp(settings.currentData);
-					if(regex.test(value) == false) {
+					if(regex.test(settings.currentValue) == false) {
 						settings.submit = false;
 					}
 				}
 			}
+			
 			/* 
 			@todo
 			  it should be possible to only pass on a certain condition.
