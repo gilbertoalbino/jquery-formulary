@@ -31,7 +31,7 @@ In your form input elements define some data properties to let jQuery Formulary 
 
 ##Note
 
-Since you define a data-validate property to your input it will imediately be made required once it has to block the submission to focus on that element.
+Since you define a data-validate attribute to your input it will imediately be made required once it has to block the submission to focus on that element.
 But if you just want to make it required and not validate, just set __validate__ to ___required___ or use the __required__ HTML attribute. 
 
 The __data-validate__ property does not mean a "filtering validation" by itself. It is a port to jQuery Formulary Plugin 
