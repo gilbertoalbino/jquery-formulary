@@ -2,10 +2,11 @@
  * Formulary 1.0 - jQuery plugin to handle form inputs
  *
  * https://github.com/gilbertoalbino/jquery-formulary
+ * http://gilbertoalbino.com
  *
- * Copyright 2014 Gilberto Albino
- * Released under the MIT license:
- *   http://www.opensource.org/licenses/mit-license.php
+ * Copyright 2014 Gilberto Albino 
+ * Released under the GLP v2 license:
+ *   http://www.gnu.org/licenses/gpl-2.0.html
  */
 jQuery.fn.formulary = function(options) {
 
