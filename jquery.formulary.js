@@ -44,6 +44,12 @@ jQuery.fn.formulary = function(options) {
 				
 				if( data !== undefined ) {
 					var validate = data.split(' ');
+					
+					// Will force to create required attribute
+					if(jQuery.inArray('required', validate)) {
+						jQuery(element).prop(required,true);
+					}
+					
 					for(var i = 0; i < validate.length; i++) {
 						if(typeof methods.validate[validate[i]] == 'function') {
 							methods.validate[validate[i]]($this, value.toString());
@@ -57,6 +63,10 @@ jQuery.fn.formulary = function(options) {
 		 * Validation suit
 		 */
 		validate : {
+			required : function(element) {
+				settings.submit = false;
+				jQuery(element).focus();
+			},
 			empty : function( element, value ) {
 				if( value == '' ) {
 					settings.submit = false;
